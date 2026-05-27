@@ -2,19 +2,42 @@
 @import "tailwindcss";
 
 :root {
-  --cream: #FFF8F0;
-  --blush: #F2C4CE;
-  --rose: #D97B85;
-  --terracotta: #C56B4E;
-  --sage: #8BAF8B;
-  --dusty-teal: #5C8D89;
-  --warm-brown: #5C3D2E;
-  --gold: #D4A437;
-  --light-sage: #C8DFC8;
-  --parchment: #F5ECD7;
+  /* Surfaces */
+  --cream: #000000;
+  --parchment: #0a0a0a;
+  --surface: #111111;
+  --card: #141414;
+
+  /* Emerald accents */
+  --rose: #10b981;
+  --terracotta: #059669;
+  --dusty-teal: #34d399;
+  --gold: #6ee7b7;
+
+  /* Star palette */
+  --star-white: #ffffff;
+  --star-periwinkle: #c4c8f5;
+  --star-mint: #86efac;
+  --blush: var(--star-periwinkle);
+  --sage: var(--star-mint);
+  --light-sage: #99f6e4;
+
+  /* Text */
+  --warm-brown: #f5f5f5;
+  --text-muted: #a3a3a3;
+  --text-subtle: #737373;
+
+  /* Borders & glow */
+  --border-emerald: rgba(16, 185, 129, 0.35);
+  --border-periwinkle: rgba(196, 200, 245, 0.25);
+  --glow-emerald: rgba(16, 185, 129, 0.2);
 }
 
 * { box-sizing: border-box; }
+
+html {
+  color-scheme: dark;
+}
 
 body {
   font-family: 'Nunito', sans-serif;
@@ -29,14 +52,14 @@ h1, h2, h3 { font-family: 'DM Serif Display', serif; }
 
 .pattern-bg {
   background-image:
-    radial-gradient(circle at 20px 20px, rgba(242,196,206,0.3) 2px, transparent 2px),
-    radial-gradient(circle at 60px 60px, rgba(139,175,139,0.2) 2px, transparent 2px);
+    radial-gradient(circle at 20px 20px, rgba(196, 200, 245, 0.12) 2px, transparent 2px),
+    radial-gradient(circle at 60px 60px, rgba(134, 239, 172, 0.1) 2px, transparent 2px);
   background-size: 80px 80px;
 }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--parchment); }
-::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 3px; }
 
 .nav-link { position: relative; }
 .nav-link::after {
@@ -54,7 +77,7 @@ h1, h2, h3 { font-family: 'DM Serif Display', serif; }
 .tag {
   display: inline-block;
   padding: 2px 10px;
-  border-radius: 100px;
+  border-radius: 2px;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -64,7 +87,7 @@ h1, h2, h3 { font-family: 'DM Serif Display', serif; }
 .book-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
 .book-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 12px 32px rgba(92,61,46,0.12);
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.15);
 }
 
 section { scroll-margin-top: 80px; }
