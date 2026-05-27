@@ -1,0 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --cream: #FFF8F0;
+  --blush: #F2C4CE;
+  --rose: #D97B85;
+  --terracotta: #C56B4E;
+  --sage: #8BAF8B;
+  --dusty-teal: #5C8D89;
+  --warm-brown: #5C3D2E;
+  --gold: #D4A437;
+  --light-sage: #C8DFC8;
+  --parchment: #F5ECD7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: var(--cream);
+  color: var(--warm-brown);
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3 { font-family: 'DM Serif Display', serif; }
+.serif { font-family: 'DM Serif Display', serif; }
+
+.pattern-bg {
+  background-image:
+    radial-gradient(circle at 20px 20px, rgba(242,196,206,0.3) 2px, transparent 2px),
+    radial-gradient(circle at 60px 60px, rgba(139,175,139,0.2) 2px, transparent 2px);
+  background-size: 80px 80px;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--parchment); }
+::-webkit-scrollbar-thumb { background: var(--blush); border-radius: 3px; }
+
+.nav-link { position: relative; }
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--rose);
+  transition: width 0.3s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+.tag {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.book-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.book-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(92,61,46,0.12);
+}
+
+section { scroll-margin-top: 80px; }
