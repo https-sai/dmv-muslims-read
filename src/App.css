@@ -42,11 +42,6 @@
   grid-template-columns: auto minmax(0, 1fr);
 }
 
-.page-footer {
-  margin-top: 0.5rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid #ffffff;
-}
 
 @media (min-width: 640px) {
   .page-container {

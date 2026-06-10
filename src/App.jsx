@@ -167,193 +167,200 @@ export default function App() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="page-sections flex w-full flex-col gap-4 sm:gap-5 md:gap-6">
-        <div className="grid-hero grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[1.75fr_1fr]">
-          <Card delay={0} className="flex h-full min-w-0 flex-col gap-3">
-            <CardHeader className="gap-3 p-0">
-              <div>
-                <CardTitle className="mb-[5px] text-2xl leading-tight">
-                  <Badge variant="yellow">DMV Muslims Read</Badge>{" "}
-                  <span className="text-base font-medium text-white">
-                    (DMR)
-                  </span>
+          <div className="grid-hero grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[1.75fr_1fr]">
+            <Card delay={0} className="flex h-full min-w-0 flex-col gap-3">
+              <CardHeader className="gap-3 p-0">
+                <div>
+                  <CardTitle className="mb-[5px] text-2xl leading-tight">
+                    <Badge variant="yellow">DMV Muslims Read</Badge>{" "}
+                    <span className="text-base font-medium text-white">
+                      (DMR)
+                    </span>
+                  </CardTitle>
+                  <CardDescription>
+                    <span className="highlight font-semibold">Open to All</span>{" "}
+                    — Monthly Book Club
+                  </CardDescription>
+                </div>
+              </CardHeader>
+              <CardFooter className="p-0">
+                <LinkButton
+                  href={links.interestForm}
+                  icon={ClipboardList}
+                  iconClassName="text-white"
+                >
+                  Interest Form
+                </LinkButton>
+              </CardFooter>
+            </Card>
+
+            <Card delay={0.08} className="flex h-full min-w-0 flex-col gap-3">
+              <CardHeader className="gap-3 p-0">
+                <CardTitle className="text-[17px]">
+                  <Badge variant="yellow">connect</Badge>
+                  <span className="text-white">:</span>
                 </CardTitle>
-                <CardDescription>
-                  <span className="highlight font-semibold">Open to All</span> —
-                  Monthly Book Club
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardFooter className="p-0">
-              <LinkButton
-                href={links.interestForm}
-                icon={ClipboardList}
-                iconClassName="text-white"
-              >
-                Interest Form
-              </LinkButton>
-            </CardFooter>
-          </Card>
+              </CardHeader>
+              <CardFooter className="flex-col items-start gap-[7px] p-0">
+                <LinkButton
+                  href={links.whatsapp}
+                  variant="outline"
+                  icon={Phone}
+                  iconClassName="text-green-500"
+                >
+                  WhatsApp
+                </LinkButton>
+                <LinkButton
+                  href={links.instagram}
+                  variant="outline"
+                  icon={Camera}
+                  iconClassName="text-pink-500"
+                >
+                  Instagram
+                </LinkButton>
+              </CardFooter>
+            </Card>
+          </div>
 
-          <Card delay={0.08} className="flex h-full min-w-0 flex-col gap-3">
-            <CardHeader className="gap-3 p-0">
-              <CardTitle className="text-[17px]">
-                <Badge variant="yellow">connect</Badge>
-                <span className="text-white">:</span>
-              </CardTitle>
-            </CardHeader>
-            <CardFooter className="flex-col items-start gap-[7px] p-0">
-              <LinkButton
-                href={links.whatsapp}
-                variant="outline"
-                icon={Phone}
-                iconClassName="text-green-500"
-              >
-                WhatsApp
-              </LinkButton>
-              <LinkButton
-                href={links.instagram}
-                variant="outline"
-                icon={Camera}
-                iconClassName="text-pink-500"
-              >
-                Instagram
-              </LinkButton>
-            </CardFooter>
-          </Card>
-        </div>
+          <div className="grid-meeting grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[auto_minmax(0,1fr)]">
+            <BookCover />
 
-        <div className="grid-meeting grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[auto_minmax(0,1fr)]">
-          <BookCover />
-
-          <Card delay={0.12} className="flex h-full min-w-0 flex-col gap-[11px]">
-            <CardHeader className="flex-row items-center gap-2 p-0">
-              <Calendar className="size-[15px] stroke-white" strokeWidth={2} />
-              <CardTitle className="text-[15px]">
-                <Badge variant="yellow">MEETING #1</Badge>
-              </CardTitle>
-            </CardHeader>
-
-            <Separator />
-
-            <CardContent className="flex flex-col gap-[5px] p-0 text-[13px]">
-              <div>
-                Saturday,{" "}
-                <Badge variant="yellow" asChild>
-                  <strong>August 22</strong>
-                </Badge>{" "}
-                · 6:00 – 9:00pm
-              </div>
-              <div>
-                @{" "}
-                <Badge variant="yellow" asChild>
-                  <strong>Cube Coffee</strong>
-                </Badge>
-                :{" "}
-                <ExternalLink href={links.googleMaps}>Google Maps</ExternalLink>
-              </div>
-              <div>
-                @{" "}
-                <Badge variant="yellow" asChild>
-                  <strong>Google Meet</strong>
-                </Badge>
-                :{" "}
-                <ExternalLink href={links.googleMeet}>Join Meet</ExternalLink>
-              </div>
-            </CardContent>
-
-            <LinkButton
-              href={links.addCalendar}
-              icon={CalendarCheck}
-              iconClassName="text-white"
+            <Card
+              delay={0.12}
+              className="flex h-full min-w-0 flex-col gap-[11px]"
             >
-              add to calendar
-            </LinkButton>
+              <CardHeader className="flex-row items-center gap-2 p-0">
+                <Calendar
+                  className="size-[15px] stroke-white"
+                  strokeWidth={2}
+                />
+                <CardTitle className="text-[15px]">
+                  <Badge variant="yellow">MEETING #1</Badge>
+                </CardTitle>
+              </CardHeader>
 
-            <Separator />
+              <Separator />
 
-            <CardContent className="flex flex-col gap-[5px] p-0 text-[13px]">
-              <div>
-                <Badge variant="yellow">book</Badge>:{" "}
-                <ExternalLink href={links.goodreads}>
-                  Al-Ghazali&apos;s <em>Letter to a Disciple</em>
-                </ExternalLink>
-              </div>
-              <div>
-                free <Badge variant="yellow">pdf</Badge>:{" "}
-                <ExternalLink href={links.pdf}>emaanlibrary.com</ExternalLink>
-              </div>
-              <div>
-                <Badge variant="yellow">rsvp</Badge>: submit a discussion
-                question
-              </div>
-            </CardContent>
+              <CardContent className="flex flex-col gap-[5px] p-0 text-[13px]">
+                <div>
+                  Saturday,{" "}
+                  <Badge variant="yellow" asChild>
+                    <strong>August 22</strong>
+                  </Badge>{" "}
+                  · 6:00 – 9:00pm
+                </div>
+                <div>
+                  @{" "}
+                  <Badge variant="yellow" asChild>
+                    <strong>Cube Coffee</strong>
+                  </Badge>
+                  :{" "}
+                  <ExternalLink href={links.googleMaps}>
+                    Google Maps
+                  </ExternalLink>
+                </div>
+                <div>
+                  @{" "}
+                  <Badge variant="yellow" asChild>
+                    <strong>Google Meet</strong>
+                  </Badge>
+                  :{" "}
+                  <ExternalLink href={links.googleMeet}>Join Meet</ExternalLink>
+                </div>
+              </CardContent>
 
-            <CardFooter className="flex-wrap gap-[7px] p-0">
               <LinkButton
-                href={links.rsvp}
-                icon={Ticket}
+                href={links.addCalendar}
+                icon={CalendarCheck}
                 iconClassName="text-white"
               >
-                RSVP
+                add to calendar
               </LinkButton>
-              <LinkButton
-                href={links.bookSuggestions}
-                variant="outline"
-                icon={BookOpen}
-                iconClassName="text-white"
-              >
-                book suggestions
-              </LinkButton>
-            </CardFooter>
-          </Card>
-        </div>
 
-        <Card delay={0.18}>
-          <CardHeader className="mb-3.5 p-0">
-            <CardTitle className="text-base">
-              <Badge variant="yellow">discussion structure</Badge>
-              <span className="ml-2.5 font-mono text-[11px] font-normal text-white">
-                (hypothetical 2 hr session)
-              </span>
-            </CardTitle>
-          </CardHeader>
+              <Separator />
 
-          <Table>
-            <TableBody>
-              {discussionRows.map(([activity, time], index) => (
-                <TableRow key={activity} index={index}>
-                  <TableCell>{activity}</TableCell>
-                  <TableCell className="text-right font-mono text-[11px] font-medium whitespace-nowrap">
-                    <span className="highlight">{time}</span>
-                  </TableCell>
-                </TableRow>
+              <CardContent className="flex flex-col gap-[5px] p-0 text-[13px]">
+                <div>
+                  <Badge variant="yellow">book</Badge>:{" "}
+                  <ExternalLink href={links.goodreads}>
+                    Al-Ghazali&apos;s <em>Letter to a Disciple</em>
+                  </ExternalLink>
+                </div>
+                <div>
+                  free <Badge variant="yellow">pdf</Badge>:{" "}
+                  <ExternalLink href={links.pdf}>emaanlibrary.com</ExternalLink>
+                </div>
+                <div>
+                  <Badge variant="yellow">rsvp</Badge>: submit a discussion
+                  question
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex-wrap gap-[7px] p-0">
+                <LinkButton
+                  href={links.rsvp}
+                  icon={Ticket}
+                  iconClassName="text-white"
+                >
+                  RSVP
+                </LinkButton>
+                <LinkButton
+                  href={links.bookSuggestions}
+                  variant="outline"
+                  icon={BookOpen}
+                  iconClassName="text-white"
+                >
+                  book suggestions
+                </LinkButton>
+              </CardFooter>
+            </Card>
+          </div>
+
+          <Card delay={0.18}>
+            <CardHeader className="mb-3.5 p-0">
+              <CardTitle className="text-base">
+                <Badge variant="yellow">discussion structure</Badge>
+                <span className="ml-2.5 font-mono text-[11px] font-normal text-white">
+                  (hypothetical 2 hr session)
+                </span>
+              </CardTitle>
+            </CardHeader>
+
+            <Table>
+              <TableBody>
+                {discussionRows.map(([activity, time], index) => (
+                  <TableRow key={activity} index={index}>
+                    <TableCell>{activity}</TableCell>
+                    <TableCell className="text-right font-mono text-[11px] font-medium whitespace-nowrap">
+                      <span className="highlight">{time}</span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+
+            <CardContent className="flex flex-col gap-3.5 p-0">
+              {discussionNotes.map(({ label, content }) => (
+                <div key={label}>
+                  <Badge variant="note" className="mb-[5px]">
+                    <span className="size-[5px] rounded-full bg-yellow/50" />
+                    {label}
+                  </Badge>
+                  {content}
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </CardContent>
+          </Card>
 
-          <CardContent className="flex flex-col gap-3.5 p-0">
-            {discussionNotes.map(({ label, content }) => (
-              <div key={label}>
-                <Badge variant="note" className="mb-[5px]">
-                  <span className="size-[5px] rounded-full bg-yellow/50" />
-                  {label}
-                </Badge>
-                {content}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <motion.div
-          className="page-footer"
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45, delay: 0.25, ease: "easeOut" }}
-        >
-          <CardFooter className="flex-col gap-4 p-0 sm:flex-row sm:items-center sm:justify-between">
-            <Badge variant="label" className="gap-1 text-[11px] tracking-wider">
-              <span>DMV Muslims Read — site by</span>
+          <motion.footer
+            className="page-footer mt-2 flex w-full flex-col gap-4 border-t border-white pt-5 sm:flex-row sm:items-center sm:justify-between"
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.45, delay: 0.25, ease: "easeOut" }}
+          >
+            <p className="font-mono text-[11px] leading-relaxed tracking-wider text-white uppercase">
+              DMV Muslims Read · site by{" "}
               <a
                 href="https://https-sai.com/"
                 target="_blank"
@@ -361,11 +368,26 @@ export default function App() {
                 onClick={(event) =>
                   onExternalLinkClick(event, "https://https-sai.com/")
                 }
-                className="underline"
+                className="link-hover underline underline-offset-2"
               >
                 https-sai
+              </a>{" "}
+              · built with{" "}
+              <a
+                href="https://blox-ui-five.vercel.app/#install"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(event) =>
+                  onExternalLinkClick(
+                    event,
+                    "https://blox-ui-five.vercel.app/#install",
+                  )
+                }
+                className="link-hover underline underline-offset-2"
+              >
+                blox-ui
               </a>
-            </Badge>
+            </p>
             <LinkButton
               href={links.notion}
               variant="outline"
@@ -374,8 +396,7 @@ export default function App() {
             >
               View on Notion
             </LinkButton>
-          </CardFooter>
-        </motion.div>
+          </motion.footer>
         </div>
       </motion.div>
     </div>
