@@ -159,15 +159,16 @@ function BookCover() {
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-bg font-body text-white">
+    <div className="page-shell bg-bg font-body text-white">
       <motion.div
         className="page-container"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="grid-hero">
-          <Card delay={0} className="flex flex-col gap-3">
+        <div className="page-sections">
+        <div className="grid-hero grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[1.75fr_1fr]">
+          <Card delay={0} className="flex h-full min-w-0 flex-col gap-3">
             <CardHeader className="gap-3 p-0">
               <div>
                 <CardTitle className="mb-[5px] text-2xl leading-tight">
@@ -193,7 +194,7 @@ export default function App() {
             </CardFooter>
           </Card>
 
-          <Card delay={0.08} className="flex flex-col gap-3">
+          <Card delay={0.08} className="flex h-full min-w-0 flex-col gap-3">
             <CardHeader className="gap-3 p-0">
               <CardTitle className="text-[17px]">
                 <Badge variant="yellow">connect</Badge>
@@ -221,8 +222,10 @@ export default function App() {
           </Card>
         </div>
 
-        <div className="grid-meeting">
-          <Card delay={0.12} className="flex flex-col gap-[11px]">
+        <div className="grid-meeting grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[auto_minmax(0,1fr)]">
+          <BookCover />
+
+          <Card delay={0.12} className="flex h-full min-w-0 flex-col gap-[11px]">
             <CardHeader className="flex-row items-center gap-2 p-0">
               <Calendar className="size-[15px] stroke-white" strokeWidth={2} />
               <CardTitle className="text-[15px]">
@@ -303,8 +306,6 @@ export default function App() {
               </LinkButton>
             </CardFooter>
           </Card>
-
-          <BookCover />
         </div>
 
         <Card delay={0.18}>
@@ -344,12 +345,13 @@ export default function App() {
         </Card>
 
         <motion.div
+          className="page-footer"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.45, delay: 0.25, ease: "easeOut" }}
         >
-          <CardFooter className="mt-8 justify-between border-t border-white pt-[18px]">
+          <CardFooter className="flex-col gap-4 p-0 sm:flex-row sm:items-center sm:justify-between">
             <Badge variant="label" className="gap-1 text-[11px] tracking-wider">
               <span>DMV Muslims Read — site by</span>
               <a
@@ -374,6 +376,7 @@ export default function App() {
             </LinkButton>
           </CardFooter>
         </motion.div>
+        </div>
       </motion.div>
     </div>
   );

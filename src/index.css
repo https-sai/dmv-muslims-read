@@ -78,10 +78,23 @@
 @layer base {
   html {
     color-scheme: dark;
+    box-sizing: border-box;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
   }
 
   body {
-    @apply m-0 bg-bg font-body text-white;
+    @apply m-0 min-h-screen bg-bg font-body text-white;
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
   }
 
   a {
