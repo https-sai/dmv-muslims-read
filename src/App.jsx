@@ -1,1051 +1,380 @@
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import "./index.css";
+import { motion } from "motion/react";
+import {
+  BookOpen,
+  Calendar,
+  CalendarCheck,
+  Camera,
+  ClipboardList,
+  ExternalLink as ExternalLinkIcon,
+  Phone,
+  Ticket,
+} from "lucide-react";
 
-// ── Data ──────────────────────────────────────────────────────────────────────
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { onExternalLinkClick } from "@/lib/open-link";
+import { cn } from "@/lib/utils";
 
-const books = {
-  hadith: [
-    {
-      title: "Al-Adab Al-Mufrad",
-      author: "Imam al-Bukhari",
-      desc: "A dedicated collection focusing exclusively on Islamic ethics, manners, and social etiquette — a beautiful companion for anyone looking to refine how they move through the world.",
-    },
-    {
-      title: "Riyadh As-Saliheen",
-      author: "Imam al-Nawawi",
-      desc: "A curated guide that organizes essential traditions into practical chapters for daily spiritual and moral development.",
-    },
-    {
-      title: "Al-Arbain an-Nawawiyyah",
-      author: "Imam al-Nawawi",
-      desc: "A concise compilation of 42 foundational traditions that encapsulate the core principles of Islamic faith and jurisprudence.",
-    },
-  ],
-  seerah: [
-    {
-      title: "The Sealed Nectar (Ar-Raheeq Al-Makhtum)",
-      author: "Safi-ur-Rahman al-Mubarakpuri",
-      desc: "Winner of a worldwide Seerah competition. A detailed, chronological account of the Prophet's life based strictly on the earliest authentic sources.",
-      link: "https://www.amazon.com/Ar-Raheeq-Al-Makhtum-Sealed-Nectar-Biography/dp/1591440718",
-    },
-    {
-      title: "The Sirah of the Prophet ﷺ",
-      author: "Dr. Yasir Qadhi",
-      desc: "Rigorous context comparing historical reports, verifying sources, and exploring how specific events align with the Quran.",
-    },
-  ],
-  spiritual: [
-    {
-      title: "Secrets of Divine Love",
-      author: "A. Helwa",
-      desc: "A poetic, deeply reassuring exploration of Islamic mysticism that addresses feelings of spiritual inadequacy. Excellent for heart-centered group reflection.",
-      link: "https://www.google.com/search?q=secrets+of+divine+love",
-    },
-    {
-      title: "Reclaim Your Heart",
-      author: "Yasmin Mogahed",
-      desc: "Insights focused on breaking free from worldly attachments and emotional shackles. Highly relatable for twenty-somethings navigating early-career burnout and relationship dynamics.",
-      link: "https://www.google.com/search?q=reclaim+your+heart+yasmin+mogahed",
-    },
-    {
-      title: "In the Early Hours",
-      author: "Khurram Murad",
-      desc: "A punchy, action-oriented handbook filled with practical advice on building routine, self-discipline, and consistent spiritual habits.",
-    },
-    {
-      title: "Purification of the Heart",
-      author: "Shaykh Hamza Yusuf",
-      desc: "A translation and commentary on Imam al-Mawlud's poem on the spiritual diseases of the heart — envy, pride, malice. Deep psychological root-cause breakdowns.",
-      link: "https://www.google.com/search?q=purification+of+the+heart+hamza+yusuf",
-    },
-    {
-      title: "Being Muslim: A Practical Guide",
-      author: "Asad Tarsin",
-      desc: "A grounded, readable guide to living Islam practically — great for newer Muslims and those revisiting the basics.",
-      link: "https://yale.imodules.com/s/1667/images/gid6/editor_documents/life_worth_living/tarsin.pdf",
-    },
-  ],
-  fiction: [
-    {
-      title: "As Long as the Lemon Trees Grow",
-      author: "Zoulfa Katouh",
-      desc: "A speculative, deeply moving contemporary novel set during the Syrian revolution. Sparks intense dialogue about trauma, faith, and hope.",
-      link: "https://www.google.com/search?q=as+long+as+the+lemon+trees+grow",
-    },
-    {
-      title: "The City of Brass",
-      author: "S.A. Chakraborty",
-      desc: "An alternate-history fantasy deeply rooted in Islamic folklore and djinn mythology. Ideal for a lighter, plot-driven month with a rich Muslim cultural backdrop.",
-      link: "https://www.google.com/search?q=the+city+of+brass",
-    },
-    {
-      title: "Between Two Moons",
-      author: "Aisha Abdel Gawad",
-      desc: "A sharp coming-of-age story centered on Muslim teenagers in New York during Ramadan. Tackles family accountability, surveillance, and religious identity.",
-      link: "https://www.google.com/search?q=between+two+moons+aisha+abdel+gawad",
-    },
-  ],
-  memoir: [
-    {
-      title: "The Autobiography of Malcolm X",
-      author: "Malcolm X with Alex Haley",
-      desc: "A non-negotiable masterpiece tracking one of the most significant spiritual and political transformations of the 20th century. A powerful anchor for discussing race, justice, and the global Ummah.",
-      link: "https://www.google.com/search?q=autobiography+of+malcolm+x",
-    },
-    {
-      title: "Lost Islamic History",
-      author: "Firas Alkhateeb",
-      desc: "A condensed chronicle of 1,400 years of Muslim civilization. Structured perfectly for chapter-by-chapter discussion without a heavy academic background.",
-      link: "https://www.google.com/search?q=lost+islamic+history+firas+alkhateeb",
-    },
-    {
-      title: "The Butterfly Mosque",
-      author: "G. Willow Wilson",
-      desc: "A nuanced memoir by an American comic-book writer detailing her conversion to Islam, her move to Egypt, and the cross-cultural tensions that followed.",
-      link: "https://www.google.com/search?q=the+butterfly+mosque",
-    },
-  ],
+import "./App.css";
+
+const links = {
+  notion:
+    "https://sahmed21.notion.site/dmv-muslims-read-36b2d237a82280b5a31bd114a1d3bd59",
+  interestForm:
+    "https://sahmed21.notion.site/36c2d237a82280a5a4c4e4ff31590950?pvs=105",
+  whatsapp: "https://chat.whatsapp.com/FeN846wxAPUHPH3BnNkVDu",
+  instagram: "https://www.instagram.com/dmvmuslimsread",
+  googleMeet: "https://meet.google.com/cgd-cyhq-rve",
+  googleMaps:
+    "https://www.google.com/maps?ll=39.285597,-76.808618&z=15&t=m&hl=en-US&gl=US&mapclient=embed&cid=8189539222596840137",
+  addCalendar: "https://calendar.app.google/peWTx1MQ1VACR94P7",
+  bookSuggestions:
+    "https://sahmed21.notion.site/37b2d237a82280c4ad70dc934d2aa4d0?pvs=105",
+  rsvp: "https://sahmed21.notion.site/37b2d237a822807c8fd8ce55f43d5732?pvs=105",
+  goodreads: "https://www.goodreads.com/book/show/254523",
+  pdf: "https://www.emaanlibrary.com/wp-content/uploads/2019/10/letter-to-a-disciple-english.pdf",
 };
+const BOOK_COVER_SRC = `${import.meta.env.BASE_URL}book-cover.png`;
 
-const categoryMeta = {
-  hadith: {
-    label: "Hadith Collections",
-    color: "#34d399",
-    bg: "rgba(52, 211, 153, 0.12)",
-  },
-  seerah: { label: "Seerah", color: "#10b981", bg: "rgba(16, 185, 129, 0.12)" },
-  spiritual: {
-    label: "Spiritual Growth & Tazkiyah",
-    color: "#6ee7b7",
-    bg: "rgba(110, 231, 183, 0.12)",
-  },
-  fiction: {
-    label: "Contemporary Fiction & Identity",
-    color: "#059669",
-    bg: "rgba(5, 150, 105, 0.15)",
-  },
-  memoir: {
-    label: "Memoir & History",
-    color: "#2dd4bf",
-    bg: "rgba(45, 212, 191, 0.12)",
-  },
-};
+const discussionRows = [
+  ["summary + presentation", "~5 min"],
+  ["group prompts", "~30 min"],
+  ["open floor for Qs + comments", "~30 min"],
+  ["subgroup prompts", "~30 min"],
+  [
+    "closing comments + decide next month's reading + discussion leader",
+    "~30 min",
+  ],
+];
 
-const sessionSchedule = [
-  { item: "Summary + presentation", time: "~5 min" },
-  { item: "Group prompts", time: "~30 min" },
-  { item: "Open floor for Qs + comments", time: "~30 min" },
-  { item: "Subgroup prompts", time: "~30 min" },
+const discussionNotes = [
   {
-    item: "Closing comments + decide next month's reading + discussion leader",
-    time: "~30 min",
+    label: "prompts",
+    content: (
+      <p className="m-0 pl-[13px] text-[13px] leading-relaxed text-white">
+        Everyone submits a question/topic for discussion at least{" "}
+        <strong className="highlight">3 days prior</strong> to meeting (new form
+        for submissions will be created on notion page prior to meetings)
+      </p>
+    ),
+  },
+  {
+    label: "discussion leader",
+    content: (
+      <ul className="m-0 list-disc pl-[26px] text-[13px] leading-[1.7] text-white">
+        <li>
+          Gives <strong className="highlight">5 min</strong> presentation +
+          summary of reading → use visuals, reference quotes, touch on the most
+          important/notable concepts that spoke to you
+        </li>
+        <li>
+          Leads <strong className="highlight">group discussion</strong>,
+          maintains time, engages everyone, keeps conversation on topic
+        </li>
+      </ul>
+    ),
+  },
+  {
+    label: "subgroups",
+    content: (
+      <ul className="m-0 list-disc pl-[26px] text-[13px] leading-[1.7] text-white">
+        <li>
+          Break off into groups of <strong className="highlight">3–5</strong>{" "}
+          people
+        </li>
+        <li>
+          Some prompts will be used for smaller group discussion segments to
+          allow people to break off and participate with less pressure
+        </li>
+      </ul>
+    ),
   },
 ];
 
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function Nav({ activeSection }) {
-  const links = [
-    { id: "about", label: "About" },
-    { id: "books", label: "Books" },
-    { id: "structure", label: "How It Works" },
-    { id: "location", label: "Location" },
-    { id: "join", label: "Join Us" },
-  ];
-
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
+function ExternalLink({ href, className, children }) {
   return (
-    <motion.nav
-      initial={{ y: -60, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50"
-      style={{
-        background: "rgba(0, 0, 0, 0.88)",
-        backdropFilter: "blur(12px)",
-        borderBottom: "1px solid var(--border-emerald)",
-      }}
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(event) => onExternalLinkClick(event, href)}
+      className={cn("link-hover font-medium text-blue underline", className)}
     >
-      <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-        <button
-          onClick={() =>
-            document
-              .getElementById("hero")
-              ?.scrollIntoView({ behavior: "smooth" })
-          }
-          className="font-bold text-lg tracking-tight"
-          style={{
-            fontFamily: "'DM Serif Display', serif",
-            color: "var(--warm-brown)",
-          }}
-        >
-          dmv muslims read
-        </button>
-        <div className="hidden md:flex items-center gap-7">
-          {links.map(({ id, label }) => (
-            <button
-              key={id}
-              onClick={() => scrollTo(id)}
-              className="nav-link text-sm font-600 transition-colors"
-              style={{
-                color:
-                  activeSection === id ? "var(--rose)" : "var(--warm-brown)",
-                fontWeight: activeSection === id ? "700" : "500",
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </motion.nav>
+      {children}
+    </a>
   );
 }
 
-function StarDeco({ size = 16, color = "var(--star-periwinkle)", style = {} }) {
+function LinkButton({
+  href,
+  variant = "yellow",
+  icon: Icon,
+  iconClassName,
+  children,
+}) {
   return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 16 16"
-      fill="none"
-      style={style}
+    <motion.a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={(event) => onExternalLinkClick(event, href)}
+      className={buttonVariants({ variant })}
+      whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+      whileTap={{ scale: 0.99 }}
     >
-      <path
-        d="M8 0L9.5 6.5L16 8L9.5 9.5L8 16L6.5 9.5L0 8L6.5 6.5L8 0Z"
-        fill={color}
-      />
-    </svg>
+      {Icon ? <Icon className={cn(iconClassName)} /> : null}
+      {children}
+    </motion.a>
   );
 }
 
-function BookCard({ book, index }) {
+function BookCover() {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.06 }}
-      className="book-card rounded-sm p-5 flex flex-col gap-2"
-      style={{
-        background: "var(--card)",
-        border: "1.5px solid var(--border-emerald)",
-      }}
+      className="book-cover"
+      initial={{ opacity: 0, y: 20, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -2, transition: { duration: 0.25 } }}
     >
-      <p
-        className="font-bold text-base leading-snug"
-        style={{
-          color: "var(--warm-brown)",
-          fontFamily: "'DM Serif Display', serif",
-        }}
-      >
-        {book.title}
-      </p>
-      <p className="text-xs font-600" style={{ color: "var(--rose)" }}>
-        {book.author}
-      </p>
-      <p className="text-sm leading-relaxed mt-1" style={{ color: "var(--text-muted)" }}>
-        {book.desc}
-      </p>
-      {book.link && (
-        <a
-          href={book.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs font-700 mt-1 self-start"
-          style={{
-            color: "var(--dusty-teal)",
-            textDecoration: "underline",
-            textUnderlineOffset: "3px",
-          }}
-        >
-          Learn more
-        </a>
-      )}
+      <img
+        src={BOOK_COVER_SRC}
+        alt="Al-Ghazali: Letter to a Disciple (Ayyuhā'l-Walad)"
+        className="book-cover-img"
+      />
     </motion.div>
   );
 }
 
-function Accordion({ title, children, defaultOpen = false }) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div
-      className="rounded-sm overflow-hidden"
-      style={{ border: "1.5px solid var(--border-periwinkle)" }}
-    >
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-6 py-4 text-left"
-        style={{ background: open ? "var(--parchment)" : "var(--card)" }}
-      >
-        <span
-          className="font-700 text-base"
-          style={{
-            color: "var(--warm-brown)",
-            fontFamily: "'DM Serif Display', serif",
-          }}
-        >
-          {title}
-        </span>
-        <motion.span
-          animate={{ rotate: open ? 45 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="text-xl font-300"
-          style={{ color: "var(--rose)", lineHeight: 1 }}
-        >
-          +
-        </motion.span>
-      </button>
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            style={{ overflow: "hidden", background: "var(--card)" }}
-          >
-            <div className="px-6 pb-5 pt-2" style={{ color: "var(--text-muted)" }}>
-              {children}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-// ── Main App ──────────────────────────────────────────────────────────────────
-
 export default function App() {
-  const [activeSection, setActiveSection] = useState("hero");
-  const [activeCategory, setActiveCategory] = useState("spiritual");
-
-  useEffect(() => {
-    const sections = [
-      "hero",
-      "about",
-      "books",
-      "structure",
-      "location",
-      "join",
-    ];
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) setActiveSection(e.target.id);
-        });
-      },
-      { threshold: 0.4 },
-    );
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div className="min-h-screen" style={{ background: "var(--cream)" }}>
-      <Nav activeSection={activeSection} />
-
-      {/* ── Hero ── */}
-      <section
-        id="hero"
-        className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden"
+    <div className="min-h-screen bg-bg font-body text-white">
+      <motion.div
+        className="page-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        {/* Background pattern */}
-        <div className="absolute inset-0 pattern-bg pointer-events-none" />
-
-        {/* Floating decorative elements */}
-        <motion.div
-          animate={{ y: [0, -12, 0], rotate: [0, 8, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-32 left-12 opacity-40"
-        >
-          <StarDeco size={28} color="var(--star-white)" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 10, 0], rotate: [0, -10, 0] }}
-          transition={{
-            duration: 6,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="absolute top-48 right-16 opacity-30"
-        >
-          <StarDeco size={20} color="var(--star-periwinkle)" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, -8, 0] }}
-          transition={{
-            duration: 4.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.5,
-          }}
-          className="absolute bottom-40 left-20 opacity-25"
-        >
-          <StarDeco size={36} color="var(--star-mint)" />
-        </motion.div>
-        <motion.div
-          animate={{ y: [0, 14, 0], rotate: [0, 12, 0] }}
-          transition={{
-            duration: 7,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 2,
-          }}
-          className="absolute bottom-32 right-24 opacity-35"
-        >
-          <StarDeco size={24} color="var(--star-white)" />
-        </motion.div>
-
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="tag mb-4"
-          style={{ background: "var(--glow-emerald)", color: "var(--rose)" }}
-        >
-          the DMV's first muslim book club
-        </motion.p>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45 }}
-          className="text-6xl md:text-8xl font-normal mb-5 leading-none"
-          style={{ color: "var(--warm-brown)" }}
-        >
-          dmv muslims
-          <br />
-          <span style={{ color: "var(--rose)", fontStyle: "italic" }}>
-            read
-          </span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="text-lg max-w-xl leading-relaxed mb-10"
-          style={{ color: "var(--text-subtle)" }}
-        >
-          Open to all — but mainly looking for curious minds and original
-          thoughts.
-          <br />
-          <span className="text-sm italic">
-            *we turn a blind eye to digital piracy
-          </span>
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.75 }}
-          className="flex gap-4 flex-wrap justify-center"
-        >
-          <button
-            onClick={() =>
-              document
-                .getElementById("join")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="px-7 py-3 rounded-sm font-700 text-white shadow-md transition-transform hover:scale-105"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--rose), var(--terracotta))",
-              boxShadow: "0 4px 16px var(--glow-emerald)",
-            }}
-          >
-            Join the Club
-          </button>
-          <button
-            onClick={() =>
-              document
-                .getElementById("about")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="px-7 py-3 rounded-sm font-700 transition-transform hover:scale-105"
-            style={{
-              border: "2px solid var(--star-periwinkle)",
-              color: "var(--warm-brown)",
-              background: "var(--card)",
-            }}
-          >
-            Learn More
-          </button>
-        </motion.div>
-
-        {/* Scroll indicator */}
-        <motion.div
-          animate={{ y: [0, 6, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-40"
-          style={{ color: "var(--rose)" }}
-        >
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path
-              d="M10 4v12M4 10l6 6 6-6"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        </motion.div>
-      </section>
-
-      {/* ── About ── */}
-      <section id="about" className="py-24 px-6">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <StarDeco size={14} color="var(--star-mint)" />
-              <p
-                className="tag"
-                style={{
-                  background: "var(--glow-emerald)",
-                  color: "var(--rose)",
-                }}
-              >
-                our story
-              </p>
-            </div>
-            <h2
-              className="text-5xl mb-8"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              Why We Read
-            </h2>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="rounded-sm p-8 md:p-10 mb-8"
-            style={{
-              background: "var(--parchment)",
-              border: "1.5px solid var(--border-emerald)",
-            }}
-          >
-            <p
-              className="text-lg leading-relaxed mb-6"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              The first thing Allah (swt) told the Prophet to do was{" "}
-              <em>read</em>.
-            </p>
-            <p className="leading-relaxed mb-5" style={{ color: "var(--text-muted)" }}>
-              As Muslims, our journey into the religion begins through reading —
-              the <strong>Quran</strong> as the <em>what</em>,{" "}
-              <strong>Hadith</strong> as the <em>how</em>,{" "}
-              <strong>Seerah</strong> as the <em>why</em>. The harder work is
-              applying what we learn back into our own lives. Being Muslim is
-              not just about completing the <strong>Fiqh</strong>; it comes down
-              to how we adopt concepts like Tawakkul, Tasawwuf, Tazkiyah, Adhab,
-              Nafs — things that are hard to implement and understand without
-              reading further into actual human thoughts and experiences.
-            </p>
-            <p className="leading-relaxed mb-5" style={{ color: "var(--text-muted)" }}>
-              Imam Al-Ghazali's <em>Revival of the Religious Sciences</em>{" "}
-              established frameworks for human behavior and ethics that modern
-              psychology took centuries to arrive at independently. Rumi's
-              writings on Tasawwuf, love, and contentment demonstrate that Islam
-              is a religion of reflection and purpose, not just obligation.
-              Malcolm X's autobiography shows how Islam can transform a person,
-              shape worldviews, and support a movement like the Civil Rights
-              Movement.
-            </p>
-            <p className="leading-relaxed" style={{ color: "var(--text-muted)" }}>
-              Reading gives us new ways to relate to Islam and depend on it — to
-              structure your priorities, handle hardship, carry yourself around
-              others, and understand the world around you.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="rounded-sm p-8 text-center"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(134, 239, 172, 0.08))",
-              border: "1.5px solid var(--border-emerald)",
-            }}
-          >
-            <p
-              className="text-lg leading-relaxed"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              We want a space to discuss, compare, challenge, and come to
-              conclusions together — where people don't hesitate to share their
-              thoughts, where they're open to learning from others, and where we
-              move with the intention of becoming better readers, listeners,
-              researchers, and closer to the deen.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Books ── */}
-      <section
-        id="books"
-        className="py-24 px-6"
-        style={{ background: "var(--parchment)" }}
-      >
-        <div className="max-w-5xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <StarDeco size={14} color="var(--star-white)" />
-              <p
-                className="tag"
-                style={{
-                  background: "var(--glow-emerald)",
-                  color: "var(--rose)",
-                }}
-              >
-                reading list
-              </p>
-            </div>
-            <h2
-              className="text-5xl mb-4"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              Potential Books
-            </h2>
-            <p style={{ color: "var(--text-subtle)" }}>
-              A curated selection across topics — pick what speaks to you.
-            </p>
-          </motion.div>
-
-          {/* Category tabs */}
-          <div className="flex flex-wrap gap-2 mb-10">
-            {Object.entries(categoryMeta).map(([key, meta]) => (
-              <button
-                key={key}
-                onClick={() => setActiveCategory(key)}
-                className="px-4 py-2 rounded-sm text-sm font-700 transition-all"
-                style={{
-                  background: activeCategory === key ? meta.color : "var(--card)",
-                  color: activeCategory === key ? "#000000" : meta.color,
-                  border: `2px solid ${meta.color}`,
-                  transform:
-                    activeCategory === key ? "scale(1.05)" : "scale(1)",
-                }}
-              >
-                {meta.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Books grid */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCategory}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.25 }}
-              className="grid md:grid-cols-2 lg:grid-cols-3 gap-5"
-            >
-              {books[activeCategory].map((book, i) => (
-                <BookCard key={book.title} book={book} index={i} />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </section>
-
-      {/* ── Discussion Structure ── */}
-      <section id="structure" className="py-24 px-6">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <StarDeco size={14} color="var(--star-periwinkle)" />
-              <p
-                className="tag"
-                style={{
-                  background: "var(--glow-emerald)",
-                  color: "var(--rose)",
-                }}
-              >
-                how it works
-              </p>
-            </div>
-            <h2
-              className="text-5xl mb-4"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              Discussion Structure
-            </h2>
-            <p style={{ color: "var(--text-subtle)" }}>
-              Monthly meetings, in-person + virtual. Here's what a session looks
-              like.
-            </p>
-          </motion.div>
-
-          <div className="flex flex-col gap-4 mb-12">
-            {[
-              {
-                title: "Pre-Meeting Prompts",
-                body: "Everyone submits a question or topic for discussion at least 3 days prior to the meeting. A new form for submissions is created on the Notion page before each meeting.",
-              },
-              {
-                title: "Discussion Leader",
-                body: "The discussion leader gives a 5-min presentation + summary of the reading — use visuals, reference quotes, touch on the most important/notable concepts that spoke to you. Then leads group discussion, maintains time, engages everyone, and keeps conversation on topic.",
-              },
-              {
-                title: "Subgroups",
-                body: "We break off into groups of 3–5 people. Some prompts will be used for smaller group discussion segments to allow people to participate with less pressure.",
-              },
-            ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="rounded-sm p-6"
-                style={{
-                  background: "var(--card)",
-                  border: "1.5px solid var(--border-emerald)",
-                }}
-              >
-                <div>
-                  <p
-                    className="font-700 mb-1"
-                    style={{
-                      color: "var(--warm-brown)",
-                      fontFamily: "'DM Serif Display', serif",
-                      fontSize: "1.05rem",
-                    }}
-                  >
-                    {item.title}
-                  </p>
-                  <p
-                    className="text-sm leading-relaxed"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {item.body}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Session timeline */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="rounded-sm overflow-hidden"
-            style={{ border: "1.5px solid var(--border-emerald)" }}
-          >
-            <div
-              className="px-6 py-4"
-              style={{ background: "var(--parchment)" }}
-            >
-              <p
-                className="font-700"
-                style={{
-                  color: "var(--warm-brown)",
-                  fontFamily: "'DM Serif Display', serif",
-                  fontSize: "1.1rem",
-                }}
-              >
-                Hypothetical 2-Hour Session
-              </p>
-            </div>
-            {sessionSchedule.map((row, i) => (
-              <div
-                key={i}
-                className="flex items-center justify-between px-6 py-4"
-                style={{
-                  background: i % 2 === 0 ? "var(--card)" : "var(--surface)",
-                  borderTop: "1px solid var(--border-emerald)",
-                }}
-              >
-                <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  {row.item}
-                </span>
-                <span
-                  className="tag ml-4 flex-shrink-0"
-                  style={{
-                    background: "var(--glow-emerald)",
-                    color: "var(--rose)",
-                  }}
-                >
-                  {row.time}
-                </span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Location ── */}
-      <section
-        id="location"
-        className="py-24 px-6"
-        style={{ background: "var(--parchment)" }}
-      >
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <StarDeco size={14} color="var(--star-mint)" />
-              <p
-                className="tag"
-                style={{
-                  background: "var(--glow-emerald)",
-                  color: "var(--rose)",
-                }}
-              >
-                where to find us
-              </p>
-            </div>
-            <h2
-              className="text-5xl mb-4"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              Location
-            </h2>
-            <p style={{ color: "var(--text-subtle)" }}>
-              Monthly meetings at{" "}
-              <strong style={{ color: "var(--warm-brown)" }}>
-                Cube Coffee MD
-              </strong>{" "}
-              in person, and virtually via Google Meet.
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="rounded-sm overflow-hidden shadow-md mb-6"
-            style={{ border: "1.5px solid var(--border-emerald)" }}
-          >
-            <iframe
-              title="Cube Coffee MD location"
-              width="100%"
-              height="380"
-              style={{ display: "block", border: 0 }}
-              loading="lazy"
-              allowFullScreen
-              referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3088.1170181440543!2d-76.8111928240445!3d39.28559667164387!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c81fa67cb7e8a5%3A0x71a716886d036ac9!2sCube%20Coffee!5e0!3m2!1sen!2sus!4v1779852976407!5m2!1sen!2sus"
-            />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <a
-              href="https://maps.google.com/?q=Cube+Coffee+MD"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 rounded-sm p-5 transition-transform hover:scale-[1.02]"
-              style={{
-                background: "var(--card)",
-                border: "1.5px solid var(--border-emerald)",
-                textDecoration: "none",
-              }}
-            >
+        <div className="grid-hero">
+          <Card delay={0} className="flex flex-col gap-3">
+            <CardHeader className="gap-3 p-0">
               <div>
-                <p
-                  className="font-700 text-sm"
-                  style={{ color: "var(--warm-brown)" }}
-                >
-                  Cube Coffee MD
-                </p>
-                <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
-                  In-person meetings
-                </p>
+                <CardTitle className="mb-[5px] text-2xl leading-tight">
+                  <Badge variant="yellow">DMV Muslims Read</Badge>{" "}
+                  <span className="text-base font-medium text-white">
+                    (DMR)
+                  </span>
+                </CardTitle>
+                <CardDescription>
+                  <span className="highlight font-semibold">Open to All</span> —
+                  Monthly Book Club
+                </CardDescription>
               </div>
-            </a>
-            <a
-              href="https://meet.google.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 rounded-sm p-5 transition-transform hover:scale-[1.02]"
-              style={{
-                background: "var(--card)",
-                border: "1.5px solid var(--border-emerald)",
-                textDecoration: "none",
-              }}
-            >
-              <div>
-                <p
-                  className="font-700 text-sm"
-                  style={{ color: "var(--warm-brown)" }}
-                >
-                  Google Meet
-                </p>
-                <p className="text-xs" style={{ color: "var(--text-subtle)" }}>
-                  Virtual option available
-                </p>
-              </div>
-            </a>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ── Join ── */}
-      <section id="join" className="py-24 px-6">
-        <div className="max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-12"
-          >
-            <div className="flex items-center gap-3 mb-3">
-              <StarDeco size={14} color="var(--star-white)" />
-              <p
-                className="tag"
-                style={{
-                  background: "var(--glow-emerald)",
-                  color: "var(--rose)",
-                }}
+            </CardHeader>
+            <CardFooter className="p-0">
+              <LinkButton
+                href={links.interestForm}
+                icon={ClipboardList}
+                iconClassName="text-white"
               >
-                get involved
-              </p>
-            </div>
-            <h2
-              className="text-5xl mb-4"
-              style={{ color: "var(--warm-brown)" }}
-            >
-              Join Us
-            </h2>
-            <p style={{ color: "var(--text-subtle)" }}>
-              Fill out the interest form below, join our WhatsApp group, and
-              we'll be in touch.
-            </p>
-          </motion.div>
+                Interest Form
+              </LinkButton>
+            </CardFooter>
+          </Card>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="rounded-sm overflow-hidden shadow-md"
-            style={{ border: "1.5px solid var(--border-emerald)" }}
-          >
-            <iframe
-              src="https://sahmed21.notion.site/ebd//36c2d237a82280a5a4c4e4ff31590950"
-              width="100%"
-              height="600"
-              frameBorder="0"
-              allowFullScreen
-              title="DMV Muslims Read Interest Form"
-              style={{ display: "block" }}
-            />
-          </motion.div>
-
-          {/* Social / connect links */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="mt-10 text-center"
-          >
-            <p className="text-sm mb-4" style={{ color: "var(--text-subtle)" }}>
-              or connect with us on
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <a
-                href="https://chat.whatsapp.com/FeN846wxAPUHPH3BnNkVDu"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-sm font-700 text-sm transition-transform hover:scale-105"
-                style={{
-                  background: "var(--card)",
-                  color: "var(--warm-brown)",
-                  border: "2px solid var(--rose)",
-                  textDecoration: "none",
-                  boxShadow: "0 4px 16px var(--glow-emerald)",
-                }}
+          <Card delay={0.08} className="flex flex-col gap-3">
+            <CardHeader className="gap-3 p-0">
+              <CardTitle className="text-[17px]">
+                <Badge variant="yellow">connect</Badge>
+                <span className="text-white">:</span>
+              </CardTitle>
+            </CardHeader>
+            <CardFooter className="flex-col items-start gap-[7px] p-0">
+              <LinkButton
+                href={links.whatsapp}
+                variant="outline"
+                icon={Phone}
+                iconClassName="text-green-500"
               >
                 WhatsApp
-              </a>
-              <a
-                href="https://www.instagram.com/dmvmuslimsread/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-sm font-700 text-sm transition-transform hover:scale-105"
-                style={{
-                  background:
-                    "linear-gradient(135deg, var(--terracotta), var(--rose))",
-                  color: "#000000",
-                  textDecoration: "none",
-                  boxShadow: "0 4px 16px var(--glow-emerald)",
-                }}
+              </LinkButton>
+              <LinkButton
+                href={links.instagram}
+                variant="outline"
+                icon={Camera}
+                iconClassName="text-pink-500"
               >
                 Instagram
-              </a>
-            </div>
-          </motion.div>
+              </LinkButton>
+            </CardFooter>
+          </Card>
         </div>
-      </section>
 
-      {/* ── Footer ── */}
-      <footer
-        className="py-10 text-center px-6"
-        style={{
-          background: "var(--parchment)",
-          color: "var(--text-muted)",
-          borderTop: "1px solid var(--border-emerald)",
-        }}
-      >
-        <p
-          className="serif italic text-2xl mb-2"
-          style={{ color: "var(--rose)" }}
-        >
-          dmv muslims read
-        </p>
-        <p className="text-sm">
-          The first Muslim book club in the DMV. Open to all curious minds.
-        </p>
-        <div className="flex justify-center gap-2 mt-4 opacity-70">
-          <StarDeco size={10} color="var(--star-white)" />
-          <StarDeco size={10} color="var(--star-periwinkle)" />
-          <StarDeco size={10} color="var(--star-mint)" />
+        <div className="grid-meeting">
+          <Card delay={0.12} className="flex flex-col gap-[11px]">
+            <CardHeader className="flex-row items-center gap-2 p-0">
+              <Calendar className="size-[15px] stroke-white" strokeWidth={2} />
+              <CardTitle className="text-[15px]">
+                <Badge variant="yellow">MEETING #1</Badge>
+              </CardTitle>
+            </CardHeader>
+
+            <Separator />
+
+            <CardContent className="flex flex-col gap-[5px] p-0 text-[13px]">
+              <div>
+                Saturday,{" "}
+                <Badge variant="yellow" asChild>
+                  <strong>August 22</strong>
+                </Badge>{" "}
+                · 6:00 – 9:00pm
+              </div>
+              <div>
+                @{" "}
+                <Badge variant="yellow" asChild>
+                  <strong>Cube Coffee</strong>
+                </Badge>
+                :{" "}
+                <ExternalLink href={links.googleMaps}>Google Maps</ExternalLink>
+              </div>
+              <div>
+                @{" "}
+                <Badge variant="yellow" asChild>
+                  <strong>Google Meet</strong>
+                </Badge>
+                :{" "}
+                <ExternalLink href={links.googleMeet}>Join Meet</ExternalLink>
+              </div>
+            </CardContent>
+
+            <LinkButton
+              href={links.addCalendar}
+              icon={CalendarCheck}
+              iconClassName="text-white"
+            >
+              add to calendar
+            </LinkButton>
+
+            <Separator />
+
+            <CardContent className="flex flex-col gap-[5px] p-0 text-[13px]">
+              <div>
+                <Badge variant="yellow">book</Badge>:{" "}
+                <ExternalLink href={links.goodreads}>
+                  Al-Ghazali&apos;s <em>Letter to a Disciple</em>
+                </ExternalLink>
+              </div>
+              <div>
+                free <Badge variant="yellow">pdf</Badge>:{" "}
+                <ExternalLink href={links.pdf}>emaanlibrary.com</ExternalLink>
+              </div>
+              <div>
+                <Badge variant="yellow">rsvp</Badge>: submit a discussion
+                question
+              </div>
+            </CardContent>
+
+            <CardFooter className="flex-wrap gap-[7px] p-0">
+              <LinkButton
+                href={links.rsvp}
+                icon={Ticket}
+                iconClassName="text-white"
+              >
+                RSVP
+              </LinkButton>
+              <LinkButton
+                href={links.bookSuggestions}
+                variant="outline"
+                icon={BookOpen}
+                iconClassName="text-white"
+              >
+                book suggestions
+              </LinkButton>
+            </CardFooter>
+          </Card>
+
+          <BookCover />
         </div>
-      </footer>
+
+        <Card delay={0.18}>
+          <CardHeader className="mb-3.5 p-0">
+            <CardTitle className="text-base">
+              <Badge variant="yellow">discussion structure</Badge>
+              <span className="ml-2.5 font-mono text-[11px] font-normal text-white">
+                (hypothetical 2 hr session)
+              </span>
+            </CardTitle>
+          </CardHeader>
+
+          <Table>
+            <TableBody>
+              {discussionRows.map(([activity, time], index) => (
+                <TableRow key={activity} index={index}>
+                  <TableCell>{activity}</TableCell>
+                  <TableCell className="text-right font-mono text-[11px] font-medium whitespace-nowrap">
+                    <span className="highlight">{time}</span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <CardContent className="flex flex-col gap-3.5 p-0">
+            {discussionNotes.map(({ label, content }) => (
+              <div key={label}>
+                <Badge variant="note" className="mb-[5px]">
+                  <span className="size-[5px] rounded-full bg-yellow/50" />
+                  {label}
+                </Badge>
+                {content}
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.45, delay: 0.25, ease: "easeOut" }}
+        >
+          <CardFooter className="mt-8 justify-between border-t border-white pt-[18px]">
+            <Badge variant="label" className="gap-1 text-[11px] tracking-wider">
+              <span>DMV Muslims Read — site by</span>
+              <a
+                href="https://https-sai.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(event) =>
+                  onExternalLinkClick(event, "https://https-sai.com/")
+                }
+                className="underline"
+              >
+                https-sai
+              </a>
+            </Badge>
+            <LinkButton
+              href={links.notion}
+              variant="outline"
+              icon={ExternalLinkIcon}
+              iconClassName="text-white"
+            >
+              View on Notion
+            </LinkButton>
+          </CardFooter>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }
