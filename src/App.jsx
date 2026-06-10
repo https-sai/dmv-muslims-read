@@ -161,12 +161,12 @@ export default function App() {
   return (
     <div className="page-shell bg-bg font-body text-white">
       <motion.div
-        className="page-container"
+        className="page-container box-border w-full max-w-4xl px-5 pt-8 pb-14 sm:px-7 sm:pt-10 sm:pb-16 md:px-8 md:pt-12 md:pb-[4.5rem]"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <div className="page-sections">
+        <div className="page-sections flex w-full flex-col gap-4 sm:gap-5 md:gap-6">
         <div className="grid-hero grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[1.75fr_1fr]">
           <Card delay={0} className="flex h-full min-w-0 flex-col gap-3">
             <CardHeader className="gap-3 p-0">
