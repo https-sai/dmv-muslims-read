@@ -19,7 +19,7 @@ function Card({ className, delay = 0, ...props }) {
         transition: { duration: 0.25, ease: "easeOut" },
       }}
       className={cn(
-        "card-glow min-w-0 rounded border border-white bg-card-surface px-[22px] py-[18px] text-white",
+        "card-glow min-w-0 rounded border border-white bg-card-surface px-4 py-4 text-white sm:px-[22px] sm:py-[18px]",
         className,
       )}
       {...props}

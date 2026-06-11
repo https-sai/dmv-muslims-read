@@ -8,6 +8,7 @@ import {
   ExternalLink as ExternalLinkIcon,
   Phone,
   Ticket,
+  ChevronDown,
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { onExternalLinkClick } from "@/lib/open-link";
 import { cn } from "@/lib/utils";
@@ -45,6 +51,8 @@ const links = {
   pdf: "https://www.emaanlibrary.com/wp-content/uploads/2019/10/letter-to-a-disciple-english.pdf",
 };
 const BOOK_COVER_SRC = `${import.meta.env.BASE_URL}book-cover.png`;
+
+const aboutTheBook = `Imagine spending years studying everything there is to know about your religion, only to realize near the end of your life that none of it has actually changed you. That is exactly the crisis Al-Ghazali addresses in this letter he wrote to a student seeking a compilation of his most important teachings. His message is simple and uncomfortable: knowledge that stays in your head and never reaches your actions is worthless — and potentially worse than ignorance. Drawing on the Quran, the Prophet's teachings, and personal experience, he lays out what it actually takes to become a better human being: intention, discipline, and the courage — tawakkul to live what you claim to believe. If you have ever felt the gap between knowing what is right and actually doing it, this letter was written for you.`;
 
 const discussionRows = [
   ["summary + presentation", "~5 min"],
@@ -118,8 +126,10 @@ function ExternalLink({ href, className, children }) {
 function LinkButton({
   href,
   variant = "yellow",
+  size,
   icon: Icon,
   iconClassName,
+  className,
   children,
 }) {
   return (
@@ -128,7 +138,7 @@ function LinkButton({
       target="_blank"
       rel="noopener noreferrer"
       onClick={(event) => onExternalLinkClick(event, href)}
-      className={buttonVariants({ variant })}
+      className={cn(buttonVariants({ variant, size }), className)}
       whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
       whileTap={{ scale: 0.99 }}
     >
@@ -148,6 +158,7 @@ function BookCover() {
       transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -2, transition: { duration: 0.25 } }}
     >
+      <span className="book-cover-label">this month&apos;s book</span>
       <img
         src={BOOK_COVER_SRC}
         alt="Al-Ghazali: Letter to a Disciple (Ayyuhā'l-Walad)"
@@ -167,7 +178,7 @@ export default function App() {
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
         <div className="page-sections flex w-full flex-col gap-4 sm:gap-5 md:gap-6">
-          <div className="grid-hero grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[1.75fr_1fr]">
+          <div className="grid-hero grid w-full gap-4">
             <Card delay={0} className="flex h-full min-w-0 flex-col gap-3">
               <CardHeader className="gap-3 p-0">
                 <div>
@@ -201,7 +212,7 @@ export default function App() {
                   <span className="text-white">:</span>
                 </CardTitle>
               </CardHeader>
-              <CardFooter className="flex-col items-start gap-[7px] p-0">
+              <CardFooter className="flex flex-wrap gap-2 p-0">
                 <LinkButton
                   href={links.whatsapp}
                   variant="outline"
@@ -222,7 +233,7 @@ export default function App() {
             </Card>
           </div>
 
-          <div className="grid-meeting grid w-full grid-cols-1 gap-4 min-[541px]:grid-cols-[auto_minmax(0,1fr)]">
+          <div className="grid-meeting grid w-full gap-3 sm:gap-4">
             <BookCover />
 
             <Card
@@ -294,6 +305,20 @@ export default function App() {
                   <Badge variant="yellow">rsvp</Badge>: submit a discussion
                   question
                 </div>
+                <div>
+                  <Collapsible>
+                    <CollapsibleTrigger className="flex w-full items-center gap-1.5 text-left font-mono text-[11px] tracking-wider uppercase text-white [&[data-state=open]_svg]:rotate-180">
+                      <Badge variant="yellow">about the book</Badge>
+                      <ChevronDown className="size-3 shrink-0 transition-transform duration-200" />
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="pt-2 text-[13px] leading-relaxed text-white">
+                      <p>
+                        {/* Your paragraph about Al-Ghazali&apos;s Letter to a Disciple */}
+                        {aboutTheBook}
+                      </p>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
               </CardContent>
 
               <CardFooter className="flex-wrap gap-[7px] p-0">
@@ -320,6 +345,7 @@ export default function App() {
             <CardHeader className="mb-3.5 p-0">
               <CardTitle className="text-base">
                 <Badge variant="yellow">discussion structure</Badge>
+                <span className="text-white">:</span>
                 <span className="ml-2.5 font-mono text-[11px] font-normal text-white">
                   (hypothetical 2 hr session)
                 </span>
